@@ -73,7 +73,7 @@
       .hero-badge {
         display: inline-block;
         background: #e6e2db;
-        color: var(--blue-gray);
+        color: var(--text);
         border: 1px solid var(--border);
         font-size: 11px;
         font-weight: 600;
@@ -90,6 +90,7 @@
         line-height: 0.95;
         letter-spacing: 2px;
         margin-bottom: 0.6rem;
+        
       }
       .hero h1 span {
         color: var(--green);
@@ -439,6 +440,26 @@
         font-size: 12px;
         border-top: 1px solid var(--border);
       }
+      .nutri-highlight {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .nutri-highlight img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 3px solid var(--green);
+        object-fit: cover;
+        margin-bottom: 6px;
+      }
+
+      .nutri-highlight p {
+        font-size: 12px;
+        color: var(--muted);
+      }
     </style>
   </head>
   <body>
@@ -448,7 +469,11 @@
         <span class="slider"></span>
       </label>
       <div class="hero-badge">Desafio Ativo</div>
-      <h1>DESAFIO<br /><span>NUTRI</span></h1>
+      <h1>DESAFIO<br />ORGULHO DO <br /><span>NUTRI</span></h1>
+      <div class="nutri-highlight">
+        <img src="img/rodrigo.png" alt="Rodrigo Souto" />
+        <p>Rodrigo Souto · Nutricionista</p>
+      </div>
       <p class="hero-sub">9 guerreiros. 1 missão. Quem vai dominar o placar?</p>
       <div class="hero-stats">
         <div class="hstat">
@@ -521,59 +546,67 @@
         // -----------------------------------------------------------
         {
           id: "p1",
-          name: "Orlando Souza",
+          name: "Lucas Sales",
           foto: "img/sales.png",
           desc: "Fã de smoothies e yoga matinal. Nunca abre mão do café da manhã.",
           color: "#7c3aed",
         },
         {
           id: "p2",
-          name: "Eduarda Sales",
+          name: "Eduarda Souza",
           foto: "img/{2E71C822-5AD3-48E2-BEAB-8F95C9FED4E6}.png",
           desc: "Personal trainer nas horas vagas. Malha todo dia, mas ama pizza.",
           color: "#2563eb",
         },
         {
           id: "p3",
-          name: "Arielle Noiva",
+          name: "Arielle Mota",
           foto: "img/p3.jpg",
           desc: "Cozinheira do grupo. Receita saudável todo dia no story.",
           color: "#db2777",
         },
         {
           id: "p4",
-          name: "Henrique Noivo",
+          name: "Henrique Alves",
           foto: "img/henrique.jpeg",
           desc: "Corredor de fim de semana. Meta: 5km sem parar.",
           color: "#ea580c",
         },
         {
           id: "p5",
-          name: "Luana Souto",
+          name: "Luana Araujo",
           foto: "img/luana.jpeg",
           desc: "Vegetariana há 2 anos. Inspira o grupo com pratos coloridos.",
           color: "#9333ea",
         },
         {
           id: "p6",
-          name: "Barnabe Encalhada",
+          name: "Emanuelle Barnabe",
           foto: "img/manu.jpeg",
           desc: "Time de futebol local. Usa o desafio pra perder 5kg.",
           color: "#0d9488",
         },
         {
           id: "p7",
-          name: "Yasmin Encalhada",
+          name: "Yasmin Oliveira",
           foto: "img/yasmin.jpeg",
           desc: "Nutricionista de coração. Dica saudável é o sobrenome dela.",
           color: "#dc2626",
         },
         {
           id: "p8",
-          name: "Rebeca 3 Faculdades",
+          name: "Rebeca Silva",
           foto: "img/rebeca.jpeg",
           desc: "Chef amador. Adora substituir ingredientes por opções fit.",
           color: "#7c3aed",
+        },
+        {
+          id: "p9",
+          name: "Rodrigo Souto",
+          foto: "img/rodrigo.png",
+          desc: "Nutricionista do desafio. O cérebro por trás de tudo.",
+          color: "#16a34a",
+          role: "nutri", // 👈 ISSO AQUI
         },
       ];
 
@@ -592,11 +625,13 @@
       }
 
       function render() {
-        const sorted = [...PARTICIPANTS].sort(
-          (a, b) => SCORES[b.id] - SCORES[a.id],
-        );
+        const sorted = PARTICIPANTS.filter((p) => p.role !== "nutri") // 👈 exclui o nutri
+          .sort((a, b) => (SCORES[b.id] || 0) - (SCORES[a.id] || 0));
         const maxPts = SCORES[sorted[0].id] || 1;
-        const total = Object.values(SCORES).reduce((a, b) => a + b, 0);
+        const total = PARTICIPANTS.filter((p) => p.role !== "nutri").reduce(
+          (acc, p) => acc + (SCORES[p.id] || 0),
+          0,
+        );
 
         document.getElementById("stat-total").textContent = total;
         document.getElementById("stat-leader").textContent =
@@ -658,6 +693,9 @@
       }
 
       render();
+      if(body.classList.contains("dark")) {
+        document.getElementsByClassName("hero-badge")[0].style.display = "none";
+      }
     </script>
   </body>
 </html>
