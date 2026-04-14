@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Desafio Nutri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#a855f7;--purple-dark:#7c3aed;--purple-light:#1e1030;
+  --dark:#0a0a0f;--surface:#111118;--bg:#0d0d14;
+  --text:#f0e8ff;--muted:#8b7aa8;--border:#2a1f40;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+.hero{background:var(--dark);padding:3rem 1.5rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -10%,#7c3aed44 0%,transparent 65%);pointer-events:none}
+.hero-badge{display:inline-block;background:#1e1030;color:#c084fc;border:1px solid #4c1d95;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 16px;border-radius:20px;margin-bottom:1.2rem}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,10vw,6rem);color:#fff;line-height:.95;letter-spacing:2px;margin-bottom:.6rem}
+.hero h1 span{color:#c084fc}
+.hero-sub{color:#6b5c80;font-size:14px;max-width:380px;margin:0 auto 2rem}
+.hero-stats{display:flex;gap:2rem;justify-content:center}
+.hstat{text-align:center}
+.hstat .num{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:#c084fc;line-height:1}
+.hstat .lbl{font-size:10px;color:#6b5c80;text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+
+.section{padding:2.5rem 1.25rem;max-width:920px;margin:0 auto}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:1px;margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;color:var(--text)}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.pts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:2.5rem}
+.pt-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center}
+.pt-card .ico{font-size:26px;margin-bottom:8px}
+.pt-card .val{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--purple);line-height:1}
+.pt-card .val small{font-size:.9rem;color:var(--muted);font-family:'DM Sans',sans-serif}
+.pt-card .dsc{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.45}
+
+.lb{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.lb-row{display:flex;align-items:center;gap:14px;padding:.9rem 1.2rem;border-bottom:1px solid var(--border);transition:background .15s}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:#16101f}
+.lb-pos{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--muted);width:28px;text-align:center;flex-shrink:0}
+.lb-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.95rem;color:#fff;flex-shrink:0}
+.lb-name{flex:1;font-size:14px;font-weight:500;color:var(--text)}
+.lb-bar-wrap{width:100px;height:5px;background:#1e1030;border-radius:3px;overflow:hidden;flex-shrink:0}
+.lb-bar{height:100%;background:linear-gradient(90deg,#7c3aed,#c084fc);border-radius:3px}
+.lb-pts{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--purple);min-width:48px;text-align:right}
+
+.p-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.p-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .15s,border-color .15s}
+.p-card:hover{transform:translateY(-4px);border-color:#4c1d95}
+.p-top{height:72px;position:relative;display:flex;align-items:flex-end;padding:0 1rem .7rem;background:#16101f}
+.p-av{width:60px;height:60px;border-radius:50%;border:3px solid var(--surface);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:#fff;position:relative;z-index:1;flex-shrink:0}
+.rank-pin{position:absolute;top:10px;right:12px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;z-index:2}
+.rk-1{background:#f0a500;color:#fff}
+.rk-2{background:#6b7280;color:#fff}
+.rk-3{background:#c87533;color:#fff}
+.rk-o{background:#1e1030;color:#8b7aa8}
+.p-body{padding:.75rem 1rem 1rem}
+.p-name{font-weight:600;font-size:15px;margin-bottom:3px;color:var(--text)}
+.p-desc{font-size:12px;color:var(--muted);line-height:1.45;margin-bottom:10px}
+.p-score{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--purple);line-height:1}
+.p-score small{font-size:.8rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400}
+
+footer{text-align:center;padding:2rem;color:var(--muted);font-size:12px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Desafio Ativo</div>
+  <h1>DESAFIO<br><span>NUTRI</span></h1>
+  <p class="hero-sub">9 guerreiros. 1 missão. Quem vai dominar o placar?</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="num" id="stat-total">0</div><div class="lbl">Pontos totais</div></div>
+    <div class="hstat"><div class="num">9</div><div class="lbl">Participantes</div></div>
+    <div class="hstat"><div class="num" id="stat-leader">—</div><div class="lbl">Líder atual</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-title">Como ganhar pontos</div>
+  <div class="pts-grid">
+    <div class="pt-card"><div class="ico">🥗</div><div class="val">10 <small>pts</small></div><div class="dsc">Postar refeição saudável no grupo</div></div>
+    <div class="pt-card"><div class="ico">🏃</div><div class="val">30 <small>pts</small></div><div class="dsc">Postar atividade física realizada</div></div>
+    <div class="pt-card"><div class="ico">👏</div><div class="val">2 <small>pts</small></div><div class="dsc">Receber elogio de outro membro</div></div>
+  </div>
+
+  <div class="sec-title">Placar geral</div>
+  <div class="lb" id="leaderboard"></div>
+</div>
+
+<div class="section">
+  <div class="sec-title">Participantes</div>
+  <div class="p-grid" id="p-grid"></div>
+</div>
+
+<footer>Desafio Nutri · Atualizado manualmente pelo admin</footer>
+
+<script>
+// ============================================================
+//  ✏️  EDITE AQUI OS PONTOS DE CADA PARTICIPANTE
+// ============================================================
+const SCORES = {
+  p1: 152,   // Orlando Souza
+  p2: 166,   // Eduarda Sales
+  p3: 76,   // Arielle Noiva
+  p4: 62,   // Henrique Noivo
+  p5: 76,   // Luana Couto
+  p6: 76,   // Barnabe Encalhada
+  p7: 106,   // Yasmin Encalhada
+  p8: 106,   // Rebeca 3 Faculdades
+
+}
+// ============================================================
+
+const PARTICIPANTS = [
+  {id:'p1', name:'Orlando Souza',     desc:'Fã de smoothies e yoga matinal. Nunca abre mão do café da manhã.', color:'#7c3aed'},
+  {id:'p2', name:'Eduarda Sales',  desc:'Personal trainer nas horas vagas. Malha todo dia, mas ama pizza.', color:'#2563eb'},
+  {id:'p3', name:'Arielle Noiva',   desc:'Cozinheira do grupo. Receita saudável todo dia no story.',          color:'#db2777'},
+  {id:'p4', name:'Henrique Noivo',   desc:'Corredor de fim de semana. Meta: 5km sem parar.',                  color:'#ea580c'},
+  {id:'p5', name:'Luana Couto',   desc:'Vegetariana há 2 anos. Inspira o grupo com pratos coloridos.',     color:'#9333ea'},
+  {id:'p6', name:'Barnabe Encalhada',      desc:'Time de futebol local. Usa o desafio pra perder 5kg.',             color:'#0d9488'},
+  {id:'p7', name:'Yasmin Encalhada',   desc:'Nutricionista de coração. Dica saudável é o sobrenome dela.',      color:'#dc2626'},
+  {id:'p8', name:'Rebeca 3 Faculdades', desc:'Chef amador. Adora substituir ingredientes por opções fit.',       color:'#7c3aed'},
+]
+
+const ini = n => n.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+
+function render() {
+  const sorted = [...PARTICIPANTS].sort((a, b) => SCORES[b.id] - SCORES[a.id])
+  const maxPts = SCORES[sorted[0].id] || 1
+  const total  = Object.values(SCORES).reduce((a, b) => a + b, 0)
+
+  document.getElementById('stat-total').textContent  = total
+  document.getElementById('stat-leader').textContent = ini(sorted[0].name)
+
+  document.getElementById('leaderboard').innerHTML = sorted.map((p, i) => `
+    <div class="lb-row">
+      <div class="lb-pos">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</div>
+      <div class="lb-av" style="background:${p.color}">${ini(p.name)}</div>
+      <div class="lb-name">${p.name}</div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:${Math.round(SCORES[p.id] / maxPts * 100)}%"></div></div>
+      <div class="lb-pts">${SCORES[p.id]}</div>
+    </div>
+  `).join('')
+
+  document.getElementById('p-grid').innerHTML = sorted.map((p, rank) => `
+    <div class="p-card">
+      <div class="p-top">
+        <div class="p-av" style="background:${p.color}">${ini(p.name)}</div>
+        <div class="rank-pin ${rank < 3 ? 'rk-' + (rank + 1) : 'rk-o'}">${rank + 1}º</div>
+      </div>
+      <div class="p-body">
+        <div class="p-name">${p.name}</div>
+        <div class="p-desc">${p.desc}</div>
+        <div class="p-score">${SCORES[p.id]} <small>pts</small></div>
+      </div>
+    </div>
+  `).join('')
+}
+
+render()
+</script>
+</body>
+</html>
